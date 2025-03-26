@@ -8,11 +8,11 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.google.services)
 }
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -49,14 +49,17 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.kotlinx.coroutines.core)
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
 
             implementation(libs.ktor.client.core)
-
-            implementation(libs.ktor.client.core)
             implementation(libs.ktor.serialization.json)
+
+            implementation(libs.firebase.firestore)
+            implementation(libs.firebase.auth)
+
         }
 
         iosMain.dependencies {

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "901495618516",
+    "project_id": "fir-fundamentals-7b55b",
+    "storage_bucket": "fir-fundamentals-7b55b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901495618516:android:a718aa35578e96dd68b441",
+        "android_client_info": {
+          "package_name": "org.marioonetti.firebasefundamentals"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBId0kBiiRjwfx5Ob8E7Y0wToQgPczfOoU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
