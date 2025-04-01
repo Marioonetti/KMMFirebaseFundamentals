@@ -1,6 +1,7 @@
-package org.marioonetti.firebasefundamentals.ui.register
+package org.marioonetti.firebasefundamentals.ui.screens.register
 
 import kotlinx.coroutines.launch
+import org.marioonetti.firebasefundamentals.data.model.UserRequestDto
 import org.marioonetti.firebasefundamentals.domain.repository.UserRepository
 import org.marioonetti.firebasefundamentals.ui.RootViewModel
 import org.marioonetti.firebasefundamentals.ui.ViewEffect
@@ -28,24 +29,33 @@ class RegisterViewModel(
             }
             is RegisterEvent.OnRegister -> {
                 if (uiState.value is RegisterState.Idle) {
-                    val state = uiState.value as RegisterState.Idle
-                    vmScope.launch {
-                        userRepository.register(state.email, state.password).fold(
-                            error = {
-                                println("Error $it")
-                            },
-                            success = {
-                                println("Hola")
-                            }
-                        )
-                    }
+                    handleRegister()
                 }
-
             }
             else -> {}
         }
     }
 
+    private fun handleRegister() {
+        val state = uiState.value as RegisterState.Idle
+        val userReq = UserRequestDto(
+            state.email.trim(),
+            state.userName,
+            state.password.trim(),
+        )
+        vmScope.launch {
+            userRepository.register(userReq).fold(
+                error = {
+                    println("Error $it")
+                },
+                success = {
+                    vmScope.launch {
+                        setEffect(RegisterEffect.OnNavigateToHome)
+                    }
+                }
+            )
+        }
+    }
 }
 
 sealed class RegisterState : ViewState() {

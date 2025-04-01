@@ -20,6 +20,7 @@ ktor = "3.0.3"
 firebase = "33.11.0"
 firebase-kmm= "2.1.0"
 google-services = "4.4.2"
+android-nav-compose = "2.9.0-alpha15"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -50,6 +51,7 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebase-kmm" }
 firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebase-kmm" }
 
+android-nav-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "android-nav-compose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

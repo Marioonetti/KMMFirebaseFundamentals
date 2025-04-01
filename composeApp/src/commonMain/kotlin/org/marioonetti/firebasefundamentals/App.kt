@@ -6,7 +6,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import org.marioonetti.firebasefundamentals.ui.register.RegisterRoute
+import org.marioonetti.firebasefundamentals.ui.navigator.Navigator
+import org.marioonetti.firebasefundamentals.ui.screens.register.RegisterRoute
 import org.marioonetti.firebasefundamentals.utils.MyAppColors.Background
 import org.marioonetti.firebasefundamentals.utils.MyAppColors.OnBackground
 import org.marioonetti.firebasefundamentals.utils.MyAppColors.OnError
@@ -30,12 +31,11 @@ fun App() {
         onError = OnError
     )
 
-
     MaterialTheme(
         colorScheme = appColorPalette
     ) {
         Surface(modifier = Modifier.fillMaxSize()) {
-            RegisterRoute()
+            Navigator()
         }
     }
 }

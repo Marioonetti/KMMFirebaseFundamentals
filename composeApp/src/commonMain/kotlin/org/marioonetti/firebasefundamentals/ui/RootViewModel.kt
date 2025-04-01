@@ -8,7 +8,7 @@ import org.koin.core.component.KoinComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
+import org.marioonetti.firebasefundamentals.ui.screens.register.RegisterEffect
 
 
 abstract class RootViewModel<S : ViewState, E : ViewEvent, C: ViewEffect>(
@@ -31,6 +31,10 @@ abstract class RootViewModel<S : ViewState, E : ViewEvent, C: ViewEffect>(
 
     protected fun updateState(reducer: S.() -> S) {
         _uiState.value = _uiState.value.reducer()
+    }
+
+    protected suspend fun setEffect(effect: C) {
+        _sideEffect.send(effect)
     }
 }
 

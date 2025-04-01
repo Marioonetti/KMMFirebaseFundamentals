@@ -1,4 +1,4 @@
-package org.marioonetti.firebasefundamentals.ui.register
+package org.marioonetti.firebasefundamentals.ui.screens.register
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
