@@ -18,7 +18,14 @@ fun HomeRoute(
     LaunchedEffect(viewModel.sideEffect) {
         viewModel.sideEffect.collect { sideEffect ->
             when (sideEffect) {
-                is HomeEffect.NavigateToLogin -> navController.navigate(Screen.Login.route)
+                is HomeEffect.NavigateToLogin -> {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
+                }
             }
         }
     }
