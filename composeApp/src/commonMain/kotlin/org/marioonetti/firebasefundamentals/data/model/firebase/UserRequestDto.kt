@@ -1,4 +1,4 @@
-package org.marioonetti.firebasefundamentals.data.model
+package org.marioonetti.firebasefundamentals.data.model.firebase
 
 data class UserRequestDto(
     val email: String,

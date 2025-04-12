@@ -1,9 +1,15 @@
 package org.marioonetti.firebasefundamentals.ui.navigator
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.toRoute
+import androidx.savedstate.SavedState
+import org.koin.core.component.getScopeId
+import org.marioonetti.firebasefundamentals.ui.screens.detail.DigimonDetailRoute
 import org.marioonetti.firebasefundamentals.ui.screens.home.HomeRoute
 import org.marioonetti.firebasefundamentals.ui.screens.login.LoginRoute
 import org.marioonetti.firebasefundamentals.ui.screens.register.RegisterRoute
@@ -27,6 +33,12 @@ fun Navigator() {
         }
         composable(route = Screen.Login.route) {
             LoginRoute(navController)
+        }
+        composable(
+            route = Screen.Detail.route,
+        ) { backStackEntry ->
+            val digimonName: DigimonDetailArgs = backStackEntry.toRoute()
+            DigimonDetailRoute(navController, digimonName.name)
         }
     }
 }

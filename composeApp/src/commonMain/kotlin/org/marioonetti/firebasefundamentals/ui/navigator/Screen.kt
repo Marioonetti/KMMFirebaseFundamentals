@@ -1,22 +1,30 @@
 package org.marioonetti.firebasefundamentals.ui.navigator
 
+import androidx.navigation.NavController
+import kotlinx.serialization.Serializable
+
 sealed class Screen(
     val route: String,
 ) {
     data object Home : Screen("/home")
+
+    data object Detail : Screen("/detail")
 
     data object Login : Screen("/login")
 
     data object Register : Screen("/register")
 
     data object Splash : Screen("/splash")
+}
 
-    fun withArgs(vararg args: Pair<String, String>): String {
-        // replace all keys with values
-        var newRoute = route
-        args.forEach { (key, value) ->
-            newRoute = newRoute.replace("{$key}", value)
+@Serializable
+data class DigimonDetailArgs(val name: String)
+
+fun NavController.navigateClearingBackStack(route: String) {
+    this.navigate(route) {
+        popUpTo(graph.startDestinationId) {
+            inclusive = true
         }
-        return newRoute
+        launchSingleTop = true
     }
 }

@@ -26,6 +26,9 @@ fun HomeRoute(
                         launchSingleTop = true
                     }
                 }
+                is HomeEffect.NavigateToDetail -> {
+                    navController.navigate(Screen.Detail)
+                }
             }
         }
     }

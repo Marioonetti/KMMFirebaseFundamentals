@@ -1,6 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -9,6 +10,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -17,7 +20,10 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
-    
+
+    val apiKey = getApiKeyFromLocalProperties(project)
+    val generatedSourcesDir = layout.buildDirectory.dir("generated/sources/apiKey/kotlin")
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -33,11 +39,46 @@ kotlin {
     
     sourceSets {
         val desktopMain by getting
+
+        val commonMain by getting {
+            kotlin.srcDir(generatedSourcesDir)
+        }
+
+        tasks.register("generateApiKeyFile") {
+            group = "build setup"
+            description = "Generates ApiKeys.kt from local.properties"
+
+            val outputDir = generatedSourcesDir.get().asFile
+            val outputFile = File(outputDir, "com/yourcompany/yourproject/secrets/ApiKeys.kt")
+
+            outputs.dir(outputDir)
+
+            doLast {
+                outputFile.parentFile.mkdirs()
+                outputFile.writeText("""
+                package org.marioonetti.firebasefundamentals.secrets
+
+                /**
+                 * Object containing API keys generated from local.properties.
+                 * IMPORTANT: This file should be added to .gitignore
+                 */
+                object ApiKeys {
+                    const val GEMINI_API_KEY: String = "$apiKey"
+                }
+            """.trimIndent())
+                println("Generated API Key file at: ${outputFile.absolutePath}")
+            }
+        }
+
+        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+            dependsOn("generateApiKeyFile")
+        }
         
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android)
         }
 
         commonMain.dependencies {
@@ -56,12 +97,20 @@ kotlin {
 
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.serialization.json)
+            implementation(libs.ktor.contentnegotiation)
 
             implementation(libs.firebase.firestore)
             implementation(libs.firebase.auth)
 
             implementation(libs.android.nav.compose)
 
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
+
+            implementation(libs.gemini.ai)
+
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
 
         iosMain.dependencies {
@@ -102,10 +151,6 @@ android {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
-}
-
 compose.desktop {
     application {
         mainClass = "org.marioonetti.firebasefundamentals.MainKt"
@@ -116,4 +161,43 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+dependencies {
+    debugImplementation(compose.uiTooling)
+
+    // Room dependencies
+    add("kspAndroid", libs.room.compiler)
+    add("kspDesktop", libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+fun getApiKeyFromLocalProperties(project: Project): String {
+    val properties = Properties()
+    val localPropertiesFile = project.rootProject.file("local.properties")
+    var apiKey = ""
+
+    if (localPropertiesFile.exists() && localPropertiesFile.isFile) {
+        try {
+            FileInputStream(localPropertiesFile).use { fis ->
+                properties.load(fis)
+                apiKey = properties.getProperty("GEMINI_API_KEY")
+                    ?: run {
+                        project.logger.warn("gemini api not found in local.properties. Using empty string.")
+                        ""
+                    }
+            }
+        } catch (e: Exception) {
+            project.logger.error("Error reading local.properties", e)
+        }
+    } else {
+        project.logger.warn("local.properties file not found at ${localPropertiesFile.absolutePath}. Using empty string for API Key.")
+    }
+    return apiKey.replace("\\", "\\\\").replace("\"", "\\\"")
 }

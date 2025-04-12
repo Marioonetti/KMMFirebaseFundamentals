@@ -47,6 +47,12 @@ sealed class Either<L, R> {
         }
     }
 
+    fun isRight(): Boolean = this is Right<L, R>
+
+    fun getLeft(): L = if (this is Left<L, R>) this.error else throw IllegalStateException("Either is not Left")
+
+    fun getRight(): R = if (this is Right<L, R>) this.success else throw IllegalStateException("Either is not Right")
+
     suspend fun foldSuspend(
         error: (L) -> Unit,
         success: suspend (R) -> Unit,

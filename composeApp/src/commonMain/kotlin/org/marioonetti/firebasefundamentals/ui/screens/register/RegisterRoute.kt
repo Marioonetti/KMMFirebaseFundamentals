@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import org.koin.compose.koinInject
 import org.marioonetti.firebasefundamentals.ui.navigator.Screen
+import org.marioonetti.firebasefundamentals.ui.navigator.navigateClearingBackStack
 
 @Composable
 fun RegisterRoute(navController: NavHostController) {
@@ -16,7 +17,7 @@ fun RegisterRoute(navController: NavHostController) {
     LaunchedEffect(viewModel.sideEffect) {
         viewModel.sideEffect.collect { sideEffect ->
             when (sideEffect) {
-                is RegisterEffect.OnNavigateToHome -> navController.navigate(Screen.Home.route)
+                is RegisterEffect.OnNavigateToHome -> navController.navigateClearingBackStack(Screen.Home.route)
             }
         }
     }

@@ -1,14 +1,14 @@
-package org.marioonetti.firebasefundamentals.data.datasource.remote
+package org.marioonetti.firebasefundamentals.data.datasource.remote.firebase
 
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
-import org.marioonetti.firebasefundamentals.data.model.UserRequestDto
+import org.marioonetti.firebasefundamentals.data.model.firebase.UserRequestDto
 import org.marioonetti.firebasefundamentals.domain.core.AppError
 import org.marioonetti.firebasefundamentals.domain.core.Either
 import org.marioonetti.firebasefundamentals.domain.core.Success
 
-class RemoteDatasourceImpl: RemoteDataSource {
+class FirebaseRemoteDatasourceImpl: FirebaseRemoteDataSource {
 
     override suspend fun register(user: UserRequestDto): Either<AppError, Success> {
         val result = Firebase.auth.createUserWithEmailAndPassword(user.email, user.password)

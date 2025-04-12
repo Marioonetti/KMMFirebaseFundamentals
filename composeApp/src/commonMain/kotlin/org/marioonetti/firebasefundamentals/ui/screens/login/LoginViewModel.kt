@@ -1,7 +1,6 @@
 package org.marioonetti.firebasefundamentals.ui.screens.login
 
 import kotlinx.coroutines.launch
-import org.marioonetti.firebasefundamentals.data.model.UserRequestDto
 import org.marioonetti.firebasefundamentals.domain.repository.UserRepository
 import org.marioonetti.firebasefundamentals.ui.RootViewModel
 import org.marioonetti.firebasefundamentals.ui.ViewEffect
