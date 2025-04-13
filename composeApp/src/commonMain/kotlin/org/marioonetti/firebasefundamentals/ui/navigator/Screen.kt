@@ -8,13 +8,22 @@ sealed class Screen(
 ) {
     data object Home : Screen("/home")
 
-    data object Detail : Screen("/detail")
+    data object Detail : Screen("/detail/{name}")
 
     data object Login : Screen("/login")
 
     data object Register : Screen("/register")
 
     data object Splash : Screen("/splash")
+
+    fun withArgs(vararg args: Pair<String, String>): String {
+        // replace all keys with values
+        var newRoute = route
+        args.forEach { (key, value) ->
+            newRoute = newRoute.replace("{$key}", value)
+        }
+        return newRoute
+    }
 }
 
 @Serializable

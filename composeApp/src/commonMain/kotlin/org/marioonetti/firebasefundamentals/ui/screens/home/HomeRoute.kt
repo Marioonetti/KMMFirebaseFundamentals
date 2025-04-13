@@ -27,7 +27,7 @@ fun HomeRoute(
                     }
                 }
                 is HomeEffect.NavigateToDetail -> {
-                    navController.navigate(Screen.Detail)
+                    navController.navigate(Screen.Detail.withArgs("name" to sideEffect.digimonName))
                 }
             }
         }

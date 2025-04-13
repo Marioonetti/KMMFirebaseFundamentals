@@ -36,6 +36,9 @@ fun Navigator() {
         }
         composable(
             route = Screen.Detail.route,
+            arguments = listOf(navArgument("name") {
+                type = NavType.StringType
+            })
         ) { backStackEntry ->
             val digimonName: DigimonDetailArgs = backStackEntry.toRoute()
             DigimonDetailRoute(navController, digimonName.name)

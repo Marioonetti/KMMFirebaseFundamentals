@@ -14,6 +14,10 @@ plugins {
     alias(libs.plugins.room)
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -172,10 +176,6 @@ dependencies {
     add("kspIosX64", libs.room.compiler)
     add("kspIosArm64", libs.room.compiler)
     add("kspIosSimulatorArm64", libs.room.compiler)
-}
-
-room {
-    schemaDirectory("$projectDir/schemas")
 }
 
 fun getApiKeyFromLocalProperties(project: Project): String {

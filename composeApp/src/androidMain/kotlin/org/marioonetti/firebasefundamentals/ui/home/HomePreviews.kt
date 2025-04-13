@@ -21,7 +21,6 @@ fun DigimonListItemPreview() {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
     ) {
         DigimonListItemComposable(
             digimon = mockDigimonList[0],
