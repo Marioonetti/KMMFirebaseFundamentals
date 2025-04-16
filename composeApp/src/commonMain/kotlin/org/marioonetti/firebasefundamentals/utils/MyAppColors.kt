@@ -3,17 +3,18 @@ package org.marioonetti.firebasefundamentals.utils
 import androidx.compose.ui.graphics.Color
 
 object MyAppColors {
-    val Primary = Color(0xFF4A90E2)           // Azul vibrante
-    val PrimaryVariant = Color(0xFF357ABD)    // Azul oscuro
-    val Secondary = Color(0xFF50E3C2)         // Verde turquesa
-    val SecondaryVariant = Color(0xFF3CB397)  // Verde oscuro
-    val Background = Color(0xFFFAFAFA)        // Blanco roto
-    val Surface = Color(0xFFFFFFFF)           // Blanco puro
-    val Error = Color(0xFFE57373)             // Rojo suave
 
-    val OnPrimary = Color(0xFFFFFFFF)         // Blanco
-    val OnSecondary = Color(0xFFFAFAFA)       // Blanco roto
-    val OnBackground = Color(0xFF212121)      // Gris oscuro
-    val OnSurface = Color(0xFF212121)         // Gris oscuro
-    val OnError = Color(0xFFFFFFFF)
+    val BackGroundAppColor = Color(0xFFadc3ac)
+    val TopAppBarColor = Color(0XFF232325)
+    val TopAppBarTitleColor = Color(0xFFa5ee65)
+
+    val BorderBlue = Color(0XFF185bab)
+    val BackgroundBlue = Color(0XFF1c3143)
+    val DarkBlueBase = Color(0xFF0C1B2A)
+    val MediumBlue = Color(0xFF18344A)
+    val LightBlue = Color(0xFF1F4E72)
+
+    val YellowTitle = Color(0xFFFFD700)
+    val OffWhiteText = Color(0xFFF8F8F8)
+    val GrayIcons = Color(0xFFCCCCCC)
 }

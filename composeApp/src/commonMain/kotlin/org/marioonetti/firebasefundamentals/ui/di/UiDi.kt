@@ -11,7 +11,7 @@ val uiModule =
     module {
         factory { RegisterViewModel(get()) }
         factory { LoginViewModel(get()) }
-        factory { HomeViewModel(get(), get()) }
+        factory { HomeViewModel(get()) }
         factory { SplashViewModel(get()) }
         factory { DigimonDetailViewModel(get(), get(), get()) }
     }

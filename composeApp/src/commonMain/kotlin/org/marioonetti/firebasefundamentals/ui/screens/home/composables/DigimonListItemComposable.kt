@@ -1,28 +1,30 @@
 package org.marioonetti.firebasefundamentals.ui.screens.home.composables
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.layout.ContentScale
 import coil3.compose.AsyncImage
 import org.marioonetti.firebasefundamentals.data.model.digimon.DigimonDto
+import org.marioonetti.firebasefundamentals.ui.theme.AudioWide
+import org.marioonetti.firebasefundamentals.ui.theme.Bungee
+import org.marioonetti.firebasefundamentals.utils.MyAppColors
 import org.marioonetti.firebasefundamentals.utils.Spacings
 import org.marioonetti.firebasefundamentals.utils.getDigimonLevelColor
 
@@ -35,20 +37,28 @@ fun DigimonListItemComposable(
     val levelColor = getDigimonLevelColor(digimon.level ?: "")
 
     Card(
-        modifier = modifier,
-        border = BorderStroke(Spacings.p8, levelColor),
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(max = Spacings.p128),
         colors = CardDefaults.elevatedCardColors(
             containerColor = Color.White,
         ),
+        border = BorderStroke(Spacings.p8, MyAppColors.DarkBlueBase),
+        shape = CutCornerShape(Spacings.p16),
         onClick = { onClick(digimon.name ?: "") }
     ) {
-        Column(modifier = Modifier.padding(Spacings.p8)) {
+        Row(
+            modifier = Modifier.padding(Spacings.p8),
+            horizontalArrangement = Arrangement.Start,
+        ) {
             AsyncImage(
                 model = digimon.img,
                 contentDescription = "Digimon Image",
                 onError = { println("Error loading the image $it") },
-                modifier = Modifier.fillMaxWidth().weight(1f)
+                modifier = Modifier.fillMaxHeight(),
+                contentScale = ContentScale.FillHeight,
             )
+            Spacer(modifier = Modifier.width(Spacings.p8))
             DigimonListItemInfoComposable(digimon, levelColor)
         }
     }
@@ -62,18 +72,18 @@ fun DigimonListItemInfoComposable(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.size(Spacings.p4))
+        Spacer(modifier = Modifier.size(Spacings.p8))
         Text(
             text = digimon.name ?: "",
-            style = MaterialTheme.typography.titleLarge,
+            fontFamily = Bungee(),
+            fontSize = MaterialTheme.typography.headlineMedium.fontSize,
         )
-        Spacer(modifier = Modifier.size(Spacings.p4))
         Text(
             text = digimon.level ?: "",
-            style = MaterialTheme.typography.bodyLarge,
             color = levelColor,
+            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+            fontFamily = AudioWide(),
         )
     }
 }

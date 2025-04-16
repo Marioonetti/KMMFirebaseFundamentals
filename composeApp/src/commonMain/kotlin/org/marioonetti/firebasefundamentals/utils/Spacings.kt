@@ -10,4 +10,5 @@ object Spacings {
     val p16 = 16.dp
     val p32 = 32.dp
     val p64 = 64.dp
+    val p128 = 128.dp
 }

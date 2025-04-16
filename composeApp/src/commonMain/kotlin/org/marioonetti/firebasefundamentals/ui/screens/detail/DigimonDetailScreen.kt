@@ -13,8 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import coil3.compose.AsyncImage
-import org.marioonetti.firebasefundamentals.ui.screens.home.HomeEvent
-import org.marioonetti.firebasefundamentals.ui.screens.home.HomeState
 import org.marioonetti.firebasefundamentals.utils.Spacings
 import org.marioonetti.firebasefundamentals.utils.getDigimonLevelColor
 

@@ -8,11 +8,15 @@ sealed class Screen(
 ) {
     data object Home : Screen("/home")
 
+    data object DigimonList : Screen("/digimonList")
+
     data object Detail : Screen("/detail/{name}")
 
     data object Login : Screen("/login")
 
     data object Register : Screen("/register")
+
+    data object Favourite : Screen("/favourite")
 
     data object Splash : Screen("/splash")
 
