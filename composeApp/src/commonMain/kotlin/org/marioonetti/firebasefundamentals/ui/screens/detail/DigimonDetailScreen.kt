@@ -2,17 +2,24 @@ package org.marioonetti.firebasefundamentals.ui.screens.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import coil3.compose.AsyncImage
+import org.marioonetti.firebasefundamentals.ui.shared.LoadingComposable
 import org.marioonetti.firebasefundamentals.utils.Spacings
 import org.marioonetti.firebasefundamentals.utils.getDigimonLevelColor
 
@@ -23,7 +30,7 @@ fun DigimonDetailScreen(
 ) {
     when (state) {
         is DigimonDetailState.Loading -> {
-            Column { }
+            LoadingComposable()
         }
         is DigimonDetailState.Idle -> {
             DigimonDetailBodyComposable(state, onEvent)
@@ -41,7 +48,7 @@ fun DigimonDetailBodyComposable(
             .background(Color.White)
             .fillMaxSize()
             .padding(Spacings.p16)
-            .border(Spacings.p8, color = getDigimonLevelColor(state.digimon.level ?: ""))
+            .border(Spacings.p8, color = getDigimonLevelColor(state.digimon.level))
             .padding(Spacings.p8),
     ) {
         AsyncImage(
@@ -51,6 +58,11 @@ fun DigimonDetailBodyComposable(
             modifier = Modifier.fillMaxWidth().weight(0.5f)
         )
         Column(modifier = Modifier.weight(0.5f)) {
+            Icon(
+                imageVector = if (state.isFavourite) Icons.Default.Favorite else Icons.Outlined.FavoriteBorder,
+                contentDescription = "Favourite",
+                modifier = Modifier.clickable { onEvent(DigimonDetailEvent.OnFavouriteTap) }
+            )
             Text("Name: ${state.digimon.name}")
             Spacer(modifier = Modifier.height(Spacings.p8))
             Text("Description: \n${state.digimon.description}")

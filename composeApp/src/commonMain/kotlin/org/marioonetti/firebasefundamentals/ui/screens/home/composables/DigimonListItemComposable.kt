@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import coil3.compose.AsyncImage
 import org.marioonetti.firebasefundamentals.data.model.digimon.DigimonDto
+import org.marioonetti.firebasefundamentals.domain.models.DigimonUi
 import org.marioonetti.firebasefundamentals.ui.theme.AudioWide
 import org.marioonetti.firebasefundamentals.ui.theme.Bungee
 import org.marioonetti.firebasefundamentals.utils.MyAppColors
@@ -30,11 +31,11 @@ import org.marioonetti.firebasefundamentals.utils.getDigimonLevelColor
 
 @Composable
 fun DigimonListItemComposable(
-    digimon: DigimonDto,
+    digimon: DigimonUi,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val levelColor = getDigimonLevelColor(digimon.level ?: "")
+    val levelColor = getDigimonLevelColor(digimon.level)
 
     Card(
         modifier = modifier
@@ -45,14 +46,14 @@ fun DigimonListItemComposable(
         ),
         border = BorderStroke(Spacings.p8, MyAppColors.DarkBlueBase),
         shape = CutCornerShape(Spacings.p16),
-        onClick = { onClick(digimon.name ?: "") }
+        onClick = { onClick(digimon.name) }
     ) {
         Row(
             modifier = Modifier.padding(Spacings.p8),
             horizontalArrangement = Arrangement.Start,
         ) {
             AsyncImage(
-                model = digimon.img,
+                model = digimon.imageUrl,
                 contentDescription = "Digimon Image",
                 onError = { println("Error loading the image $it") },
                 modifier = Modifier.fillMaxHeight(),
@@ -66,7 +67,7 @@ fun DigimonListItemComposable(
 
 @Composable
 fun DigimonListItemInfoComposable(
-    digimon: DigimonDto,
+    digimon: DigimonUi,
     levelColor: Color,
     modifier: Modifier = Modifier
 ) {
@@ -75,12 +76,12 @@ fun DigimonListItemInfoComposable(
     ) {
         Spacer(modifier = Modifier.size(Spacings.p8))
         Text(
-            text = digimon.name ?: "",
+            text = digimon.name,
             fontFamily = Bungee(),
             fontSize = MaterialTheme.typography.headlineMedium.fontSize,
         )
         Text(
-            text = digimon.level ?: "",
+            text = digimon.level,
             color = levelColor,
             fontSize = MaterialTheme.typography.headlineSmall.fontSize,
             fontFamily = AudioWide(),

@@ -20,9 +20,7 @@ class DigimonDetailViewModel(
         vmScope.launch {
             digimonRepository.getDigimonByName(digimonName).fold(
                 success = { digimon ->
-                    updateState {
-                        DigimonDetailState.Idle(digimon)
-                    }
+                    checkIfDigimonIsFavourite(digimon)
                 },
                 error =  {
                     println("Error loading digimon $it")
@@ -32,7 +30,41 @@ class DigimonDetailViewModel(
     }
 
     override fun onEvent(event: DigimonDetailEvent) {
-        TODO("Not yet implemented")
+        when (event) {
+            is DigimonDetailEvent.OnFavouriteTap -> {
+                if (uiState.value is DigimonDetailState.Idle) {
+                    vmScope.launch {
+                        digimonRepository.saveFavDigimon((uiState.value as DigimonDetailState.Idle).digimon).fold(
+                            success = {
+                                updateState {
+                                    val currentState = uiState.value as DigimonDetailState.Idle
+                                    currentState.copy(isFavourite = !currentState.isFavourite)
+                                }
+                                println("Digimon saved as favourite")
+                            },
+                            error = {
+                                println("Error saving digimon as favourite $it")
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkIfDigimonIsFavourite(digimon: DigimonUi) {
+        vmScope.launch {
+            digimonRepository.checkFavDigimon(digimon.name).fold(
+                success = { isFavourite ->
+                    updateState {
+                        DigimonDetailState.Idle(digimon, isFavourite)
+                    }
+                },
+                error = {
+                    println("Error checking if digimon is favourite $it")
+                }
+            )
+        }
     }
 
 }
@@ -41,11 +73,12 @@ sealed class DigimonDetailState: ViewState() {
     data object Loading: DigimonDetailState()
     data class Idle(
         val digimon: DigimonUi,
+        val isFavourite: Boolean = false,
     ): DigimonDetailState()
 }
 
 sealed class DigimonDetailEvent: ViewEvent() {
-
+    data object OnFavouriteTap: DigimonDetailEvent()
 }
 
 sealed class DigimonDetailViewEffect: ViewEffect() {

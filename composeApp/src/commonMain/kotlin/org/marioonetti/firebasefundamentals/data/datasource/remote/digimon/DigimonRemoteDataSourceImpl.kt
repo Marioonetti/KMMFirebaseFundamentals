@@ -6,6 +6,8 @@ import io.ktor.client.request.get
 import org.marioonetti.firebasefundamentals.data.model.digimon.DigimonDto
 import org.marioonetti.firebasefundamentals.domain.core.AppError
 import org.marioonetti.firebasefundamentals.domain.core.Either
+import org.marioonetti.firebasefundamentals.domain.mappers.toDigimonUi
+import org.marioonetti.firebasefundamentals.domain.models.DigimonUi
 
 private const val BASE_URL = "https://digimon-api.vercel.app/api/digimon"
 
@@ -13,8 +15,8 @@ class DigimonRemoteDataSourceImpl(
     private val client: HttpClient
 ) : DigimonRemoteDataSource {
 
-    override suspend fun getRandomDigimon(): Either<AppError, List<DigimonDto>> {
-        val resultAll = getAllDigimon()
+    override suspend fun getAllDigimon(): Either<AppError, List<DigimonUi>> {
+        val resultAll = fetchDigimons()
         return if (resultAll.isRight()) {
             Either.Right(resultAll.getRight())
         } else {
@@ -32,9 +34,9 @@ class DigimonRemoteDataSourceImpl(
         }
     }
 
-    private suspend fun getAllDigimon(): Either<AppError, List<DigimonDto>> {
+    private suspend fun fetchDigimons(): Either<AppError, List<DigimonUi>> {
         return try {
-            val response: List<DigimonDto> = client.get(BASE_URL).body()
+            val response: List<DigimonUi> = client.get(BASE_URL).body<List<DigimonDto>>().map { it.toDigimonUi() }
             Either.Right(response)
         } catch (e: Exception) {
             Either.Left(AppError.Remote(e.message ?: "Unknown error"))

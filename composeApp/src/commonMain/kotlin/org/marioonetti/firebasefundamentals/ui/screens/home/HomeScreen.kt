@@ -19,6 +19,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.marioonetti.firebasefundamentals.ui.screens.home.composables.DigimonListItemComposable
 import org.marioonetti.firebasefundamentals.ui.navigator.navBars.CustomBottomBar
 import org.marioonetti.firebasefundamentals.ui.navigator.navBars.CustomTopAppBar
+import org.marioonetti.firebasefundamentals.ui.shared.LoadingComposable
 import org.marioonetti.firebasefundamentals.utils.Spacings
 
 @Composable
@@ -29,14 +30,7 @@ fun HomeScreen(
 ) {
     when (state) {
         is HomeState.Loading -> {
-            Column(
-                modifier = modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                CircularProgressIndicator()
-            }
+            LoadingComposable()
         }
 
         is HomeState.Idle -> {

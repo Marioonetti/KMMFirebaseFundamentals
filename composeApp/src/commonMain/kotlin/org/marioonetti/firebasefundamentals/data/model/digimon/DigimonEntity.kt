@@ -5,8 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class DigimonEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = false)
     val name: String,
     val level: String,
     val imageUrl: String,

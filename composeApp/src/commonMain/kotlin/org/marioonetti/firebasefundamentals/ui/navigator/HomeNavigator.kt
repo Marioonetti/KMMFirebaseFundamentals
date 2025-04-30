@@ -3,11 +3,16 @@ package org.marioonetti.firebasefundamentals.ui.navigator
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.toRoute
@@ -26,16 +31,26 @@ fun HomeNavigator(
     rootNavController: NavHostController
 ) {
     val homeNavController = rememberNavController()
+
+    val navBackStackEntry by homeNavController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
     Scaffold(
         topBar = {
             CustomTopAppBar(
                 title = stringResource(Res.string.home_top_bar_title),
+                showBackArrow = currentRoute != Screen.DigimonList.route && currentRoute != Screen.Favourite.route,
                 onProfileClick = {
                     rootNavController.navigate(Screen.Login.route) {
                         popUpTo(rootNavController.graph.startDestinationId) {
                             inclusive = true
                         }
                         launchSingleTop = true
+                    }
+                },
+                onBackClick = {
+                    if (homeNavController.previousBackStackEntry != null) {
+                        homeNavController.popBackStack()
                     }
                 }
             )

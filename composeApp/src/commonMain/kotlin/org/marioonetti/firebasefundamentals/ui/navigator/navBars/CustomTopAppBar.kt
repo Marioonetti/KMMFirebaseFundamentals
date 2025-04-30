@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +25,8 @@ import org.marioonetti.firebasefundamentals.utils.Spacings
 fun CustomTopAppBar(
     title: String,
     onProfileClick: () -> Unit,
+    onBackClick: () -> Unit = {},
+    showBackArrow: Boolean,
 ) {
     Box(modifier = Modifier.fillMaxWidth().height(Spacings.p64).background(MyAppColors.TopAppBarColor)) {
         Row(
@@ -31,6 +34,16 @@ fun CustomTopAppBar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
+            if (showBackArrow) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowLeft,
+                    contentDescription = null,
+                    tint = MyAppColors.TopAppBarTitleColor,
+                    modifier = Modifier.clickable {
+                        onBackClick()
+                    }.fillMaxSize().weight(0.5f)
+                )
+            }
             Text(
                 text = title,
                 fontFamily = AudioWide(),

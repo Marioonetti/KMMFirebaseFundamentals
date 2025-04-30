@@ -10,6 +10,6 @@ import org.marioonetti.firebasefundamentals.domain.repository.UserRepository
 
 val domainModule = module {
     single<UserRepository> { UserRepositoryImpl(get()) }
-    single<DigimonRepository> { DigimonRepositoryImpl(get(), get(), get()) }
+    single<DigimonRepository> { DigimonRepositoryImpl(get(), get(), get(), get()) }
     single<GeminiRepository> { GeminiRepositoryImpl(get()) }
 }

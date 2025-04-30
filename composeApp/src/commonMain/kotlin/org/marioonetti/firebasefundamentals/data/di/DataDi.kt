@@ -2,6 +2,7 @@ package org.marioonetti.firebasefundamentals.data.di
 
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
@@ -40,6 +41,11 @@ val dataModule = module {
                 url {
                     protocol = URLProtocol.HTTPS
                 }
+            }
+            install(HttpTimeout) {
+                connectTimeoutMillis = 30_000
+                socketTimeoutMillis  = 60_000
+                requestTimeoutMillis = 120_000
             }
         }
     }

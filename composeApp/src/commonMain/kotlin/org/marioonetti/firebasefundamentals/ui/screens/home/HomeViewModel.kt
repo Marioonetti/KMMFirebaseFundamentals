@@ -2,6 +2,7 @@ package org.marioonetti.firebasefundamentals.ui.screens.home
 
 import kotlinx.coroutines.launch
 import org.marioonetti.firebasefundamentals.data.model.digimon.DigimonDto
+import org.marioonetti.firebasefundamentals.domain.models.DigimonUi
 import org.marioonetti.firebasefundamentals.domain.repository.DigimonRepository
 import org.marioonetti.firebasefundamentals.domain.repository.UserRepository
 import org.marioonetti.firebasefundamentals.ui.RootViewModel
@@ -15,7 +16,7 @@ class HomeViewModel(
 
     init {
         vmScope.launch {
-            digimonRepository.getRandomDigimon().fold(
+            digimonRepository.getAllDigimon().fold(
                 error = {
                     println("Error $it")
                 },
@@ -40,7 +41,7 @@ class HomeViewModel(
 
 sealed class HomeState: ViewState() {
     data class Idle(
-        val digimonList: List<DigimonDto> = emptyList(),
+        val digimonList: List<DigimonUi> = emptyList(),
     ): HomeState()
     data object Loading: HomeState()
 }

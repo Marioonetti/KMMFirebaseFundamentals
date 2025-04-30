@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.marioonetti.firebasefundamentals.data.model.digimon.DigimonDto
+import org.marioonetti.firebasefundamentals.domain.mappers.toDigimonUi
 import org.marioonetti.firebasefundamentals.domain.models.mock.mockDigimonList
 import org.marioonetti.firebasefundamentals.ui.screens.home.HomeScreen
 import org.marioonetti.firebasefundamentals.ui.screens.home.HomeState
@@ -24,12 +25,12 @@ fun DigimonListItemPreview() {
         verticalArrangement = Arrangement.Center,
     ) {
         DigimonListItemComposable(
-            digimon = mockDigimonList[0],
+            digimon = mockDigimonList[0].toDigimonUi(),
             {}
         )
         Spacer(modifier = Modifier.height(10.dp))
         DigimonListItemComposable(
-            digimon = mockDigimonList[1],
+            digimon = mockDigimonList[1].toDigimonUi(),
             {}
         )
     }
@@ -38,5 +39,5 @@ fun DigimonListItemPreview() {
 @Preview
 @Composable
 fun HomePreview() {
-    HomeScreen(HomeState.Idle(mockDigimonList), onEvent = {})
+    HomeScreen(HomeState.Idle(mockDigimonList.map { it.toDigimonUi() }), onEvent = {})
 }

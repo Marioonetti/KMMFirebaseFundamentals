@@ -2,6 +2,7 @@ package org.marioonetti.firebasefundamentals.ui.di
 
 import org.koin.dsl.module
 import org.marioonetti.firebasefundamentals.ui.screens.detail.DigimonDetailViewModel
+import org.marioonetti.firebasefundamentals.ui.screens.favourite.FavouriteViewModel
 import org.marioonetti.firebasefundamentals.ui.screens.home.HomeViewModel
 import org.marioonetti.firebasefundamentals.ui.screens.login.LoginViewModel
 import org.marioonetti.firebasefundamentals.ui.screens.register.RegisterViewModel
@@ -14,4 +15,5 @@ val uiModule =
         factory { HomeViewModel(get()) }
         factory { SplashViewModel(get()) }
         factory { DigimonDetailViewModel(get(), get(), get()) }
+        factory { FavouriteViewModel(get()) }
     }
