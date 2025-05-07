@@ -53,7 +53,7 @@ kotlin {
             description = "Generates ApiKeys.kt from local.properties"
 
             val outputDir = generatedSourcesDir.get().asFile
-            val outputFile = File(outputDir, "com/yourcompany/yourproject/secrets/ApiKeys.kt")
+            val outputFile = File(outputDir, "org/marioonetti/firebasefundamentals/secrets/ApiKeys.kt")
 
             outputs.dir(outputDir)
 
@@ -75,6 +75,15 @@ kotlin {
         }
 
         tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+            dependsOn("generateApiKeyFile")
+        }
+        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon> {
+            dependsOn("generateApiKeyFile")
+        }
+        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinNativeCompile> {
+            dependsOn("generateApiKeyFile")
+        }
+        tasks.matching { it.name.startsWith("ksp") }.configureEach {
             dependsOn("generateApiKeyFile")
         }
         
