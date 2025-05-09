@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -69,6 +71,8 @@ fun DigimonDetailBodyComposable(
     ) {
         DigimonImageComposable(
             digimonUi = state.digimon,
+            isFavourite = state.isFavourite,
+            onEvent = onEvent,
             modifier = Modifier.weight(0.5f)
         )
         Spacer(Modifier.height(Spacings.p32))
@@ -83,6 +87,8 @@ fun DigimonDetailBodyComposable(
 fun DigimonImageComposable(
     digimonUi: DigimonUi,
     modifier: Modifier,
+    isFavourite: Boolean,
+    onEvent: (DigimonDetailEvent) -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,12 +102,30 @@ fun DigimonImageComposable(
                 containerColor = Color.White,
             ),
         ) {
-            AsyncImage(
-                model = digimonUi.imageUrl,
-                contentDescription = "Digimon Image",
-                onError = { println("Error loading the image $it") },
-                modifier = Modifier.fillMaxWidth()
-            )
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                AsyncImage(
+                    model = digimonUi.imageUrl,
+                    contentDescription = "Digimon Image",
+                    onError = { println("Error loading the image $it") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                IconButton(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(Spacings.p8),
+                    onClick = { onEvent(DigimonDetailEvent.OnFavouriteTap) },
+                    content = {
+                        Icon(
+                            imageVector = if (isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                            contentDescription = "Favourite",
+                            tint = MyAppColors.TopAppBarTitleColor,
+                            modifier = Modifier.size(Spacings.p64)
+                        )
+                    }
+                )
+            }
         }
         Spacer(modifier = Modifier.height(Spacings.p8))
         Text(
@@ -133,7 +157,6 @@ fun DigimonInfoComposable(
             .drawBehind {
                 val stroke = Spacings.p8.toPx()
                 val half = stroke / 2f
-
                 drawLine(
                     color = borderColor,
                     strokeWidth = stroke,
@@ -162,21 +185,5 @@ fun DigimonInfoComposable(
             color = MyAppColors.TopAppBarTitleColor,
             fontSize = MaterialTheme.typography.bodyLarge.fontSize
         )
-    }
-}
-
-
-@Composable
-private fun getBottomLineShape(lineThicknessDp: Dp) : Shape {
-    val lineThicknessPx = with(LocalDensity.current) {lineThicknessDp.toPx()}
-    return GenericShape { size, _ ->
-        // 1) Bottom-left corner
-        moveTo(0f, size.height)
-        // 2) Bottom-right corner
-        lineTo(size.width, size.height)
-        // 3) Top-right corner
-        lineTo(size.width, size.height - lineThicknessPx)
-        // 4) Top-left corner
-        lineTo(0f, size.height - lineThicknessPx)
     }
 }

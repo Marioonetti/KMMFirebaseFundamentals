@@ -27,7 +27,7 @@ fun CustomBottomBar(
     onTabSelected: (String) -> Unit,
 ) {
 
-    val homeIcon = if (selectedTab == Screen.DigimonList.route) {
+    val homeIcon = if (selectedTab == Screen.DigimonList.route || selectedTab == Screen.Detail.route) {
         Icons.Filled.Home
     } else {
         Icons.Outlined.Home

@@ -19,7 +19,9 @@ class FavouriteViewModel(
     override fun onEvent(event: FavouriteEvent) {
         when (event) {
             is FavouriteEvent.OnFavouriteTap -> {
-                // Handle click event
+                vmScope.launch {
+                    setEffect(FavouriteViewEffect.ShowDetail(event.name))
+                }
             }
         }
     }
@@ -41,7 +43,7 @@ class FavouriteViewModel(
 }
 
 sealed class FavouriteEvent: ViewEvent() {
-    data object OnFavouriteTap : FavouriteEvent()
+    data class OnFavouriteTap(val name: String) : FavouriteEvent()
 }
 
 sealed class FavouriteState: ViewState() {
@@ -52,5 +54,5 @@ sealed class FavouriteState: ViewState() {
 }
 
 sealed class FavouriteViewEffect: ViewEffect() {
-    data object ShowDetail : FavouriteViewEffect()
+    data class ShowDetail(val name: String) : FavouriteViewEffect()
 }

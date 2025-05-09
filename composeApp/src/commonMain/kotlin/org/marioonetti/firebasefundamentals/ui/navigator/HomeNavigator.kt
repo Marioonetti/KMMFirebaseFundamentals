@@ -90,7 +90,7 @@ fun HomeNavigator(
                 HomeRoute(homeNavController)
             }
             composable(route = Screen.Favourite.route) {
-                FavouriteRoute()
+                FavouriteRoute(homeNavController)
             }
         }
     }

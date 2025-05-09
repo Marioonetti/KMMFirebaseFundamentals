@@ -11,7 +11,7 @@ import org.marioonetti.firebasefundamentals.utils.MyAppColors
 @Composable
 fun App() {
     val appColorPalette = lightColorScheme(
-       background = MyAppColors.BackGroundAppColor
+       background = MyAppColors.LightBlue
     )
 
     MaterialTheme(

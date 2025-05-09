@@ -16,7 +16,7 @@ import org.marioonetti.firebasefundamentals.utils.MyAppColors
 @Composable
 fun DetailScreenPreview() {
     Box(
-        modifier = Modifier.background(MyAppColors.BackGroundAppColor).fillMaxSize()
+        modifier = Modifier.background(MyAppColors.LightBlue).fillMaxSize()
     )
     DigimonDetailBodyComposable(
         state = DigimonDetailState.Idle(
