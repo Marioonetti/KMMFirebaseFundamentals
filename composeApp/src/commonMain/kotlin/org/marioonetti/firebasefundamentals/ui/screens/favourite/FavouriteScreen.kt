@@ -115,7 +115,6 @@ fun FavDigimonItem(
         while (true) {
             val targetX = Random.nextFloat() * (maxW.value - size.value)
             val targetY = Random.nextFloat() * (maxH.value - size.value)
-            delay(2000)
             animX.animateTo(targetX.dp, animationSpec = tween(5000))
             animY.animateTo(targetY.dp, animationSpec = tween(5000))
         }

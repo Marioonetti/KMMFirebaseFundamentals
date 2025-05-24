@@ -18,6 +18,7 @@ fun RegisterRoute(navController: NavHostController) {
         viewModel.sideEffect.collect { sideEffect ->
             when (sideEffect) {
                 is RegisterEffect.OnNavigateToHome -> navController.navigateClearingBackStack(Screen.Home.route)
+                is RegisterEffect.OnNavigateToLogin -> navController.popBackStack()
             }
         }
     }

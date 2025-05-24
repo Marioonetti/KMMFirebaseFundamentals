@@ -19,17 +19,23 @@ class RegisterViewModel(
                     updateState { (this as RegisterState.Idle).copy(email = event.newEmail) }
                 }
             }
-
             is RegisterEvent.OnPasswordChanged -> updateState {
                 (this as? RegisterState.Idle)?.copy(password = event.newPassword) ?: this
             }
-
+            is RegisterEvent.OnConfirmPasswordChanged -> updateState {
+                (this as? RegisterState.Idle)?.copy(confirmPassword = event.newPassword) ?: this
+            }
             is RegisterEvent.OnUsernameChanged -> updateState {
                 (this as? RegisterState.Idle)?.copy(userName = event.newUserName) ?: this
             }
             is RegisterEvent.OnRegister -> {
                 if (uiState.value is RegisterState.Idle) {
                     handleRegister()
+                }
+            }
+            is RegisterEvent.OnNavigateToLogin -> {
+                vmScope.launch {
+                    setEffect(RegisterEffect.OnNavigateToLogin)
                 }
             }
             else -> {}
@@ -63,18 +69,22 @@ sealed class RegisterState : ViewState() {
         val email: String = "",
         val userName: String = "",
         val password: String = "",
+        val confirmPassword: String = "",
     ) : RegisterState()
 }
 
 sealed class RegisterEvent : ViewEvent() {
     data class OnEmailChanged(val newEmail: String) : RegisterEvent()
     data class OnPasswordChanged(val newPassword: String) : RegisterEvent()
+    data class OnConfirmPasswordChanged(val newPassword: String) : RegisterEvent()
     data class OnUsernameChanged(val newUserName: String) : RegisterEvent()
 
     data object OnCheckFields : RegisterEvent()
     data object OnRegister : RegisterEvent()
+    data object OnNavigateToLogin : RegisterEvent()
 }
 
 sealed class RegisterEffect : ViewEffect() {
     data object OnNavigateToHome : RegisterEffect()
+    data object OnNavigateToLogin : RegisterEffect()
 }

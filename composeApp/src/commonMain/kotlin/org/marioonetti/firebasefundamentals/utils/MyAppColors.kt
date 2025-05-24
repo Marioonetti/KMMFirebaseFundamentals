@@ -14,6 +14,9 @@ object MyAppColors {
     val MediumBlue = Color(0xFF18344A)
     val LightBlue = Color(0xFF1F4E72)
 
+    val YellowButton = Color(0xFFF4C319)
+    val PurpleButtonText = Color(0xFF120A8F)
+
     val YellowTitle = Color(0xFFFFD700)
     val OffWhiteText = Color(0xFFF8F8F8)
     val GrayIcons = Color(0xFFCCCCCC)
