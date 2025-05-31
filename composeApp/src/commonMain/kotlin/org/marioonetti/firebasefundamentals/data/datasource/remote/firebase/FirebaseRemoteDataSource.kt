@@ -5,6 +5,7 @@ import org.marioonetti.firebasefundamentals.domain.core.AppError
 import org.marioonetti.firebasefundamentals.domain.core.Either
 import org.marioonetti.firebasefundamentals.domain.core.Success
 import org.marioonetti.firebasefundamentals.domain.models.DigimonUi
+import org.marioonetti.firebasefundamentals.domain.models.User
 
 interface FirebaseRemoteDataSource {
 
@@ -23,5 +24,7 @@ interface FirebaseRemoteDataSource {
     suspend fun checkFavDigimon(name: String): Either<AppError, Boolean>
 
     suspend fun removeFavDigimon(name: String): Either<AppError, Success>
+
+    suspend fun getUserData(): Either<AppError, User>
 
 }

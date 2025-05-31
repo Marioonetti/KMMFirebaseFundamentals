@@ -4,6 +4,7 @@ import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
 import org.marioonetti.firebasefundamentals.data.model.digimon.DigimonFirebaseDto
+import org.marioonetti.firebasefundamentals.data.model.firebase.FireBaseUserDto
 import org.marioonetti.firebasefundamentals.data.model.firebase.UserRequestDto
 import org.marioonetti.firebasefundamentals.domain.core.AppError
 import org.marioonetti.firebasefundamentals.domain.core.Either
@@ -11,6 +12,7 @@ import org.marioonetti.firebasefundamentals.domain.core.Success
 import org.marioonetti.firebasefundamentals.domain.mappers.toDigimonFirebase
 import org.marioonetti.firebasefundamentals.domain.mappers.toDigimonUi
 import org.marioonetti.firebasefundamentals.domain.models.DigimonUi
+import org.marioonetti.firebasefundamentals.domain.models.User
 
 class FirebaseRemoteDatasourceImpl: FirebaseRemoteDataSource {
 
@@ -108,6 +110,24 @@ class FirebaseRemoteDatasourceImpl: FirebaseRemoteDataSource {
                 return Either.Right(Success)
             } catch (e: Exception) {
                 return Either.Left(AppError.Remote("Error removing fav digimon: ${e.message}"))
+            }
+        }
+        return Either.Left(AppError.Remote("User not logged in"))
+    }
+
+    override suspend fun getUserData(): Either<AppError, User> {
+        val uid = Firebase.auth.currentUser?.uid
+        if (uid != null) {
+            try {
+                val firebaseUser = Firebase.firestore
+                    .collection("users")
+                    .document(uid)
+                    .get()
+                    .data<FireBaseUserDto>()
+
+                return Either.Right(User(firebaseUser.username, firebaseUser.email))
+            } catch (e: Exception) {
+                return Either.Left(AppError.Remote("Error getting user data: ${e.message}"))
             }
         }
         return Either.Left(AppError.Remote("User not logged in"))

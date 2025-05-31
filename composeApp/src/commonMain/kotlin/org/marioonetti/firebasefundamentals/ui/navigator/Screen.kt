@@ -20,6 +20,8 @@ sealed class Screen(
 
     data object Splash : Screen("/splash")
 
+    data object Profile : Screen("/profile")
+
     fun withArgs(vararg args: Pair<String, String>): String {
         // replace all keys with values
         var newRoute = route

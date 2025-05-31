@@ -5,6 +5,7 @@ import org.marioonetti.firebasefundamentals.data.model.firebase.UserRequestDto
 import org.marioonetti.firebasefundamentals.domain.core.AppError
 import org.marioonetti.firebasefundamentals.domain.core.Either
 import org.marioonetti.firebasefundamentals.domain.core.Success
+import org.marioonetti.firebasefundamentals.domain.models.User
 import org.marioonetti.firebasefundamentals.domain.repository.UserRepository
 
 class UserRepositoryImpl(
@@ -18,5 +19,7 @@ class UserRepositoryImpl(
     override suspend fun logOut(): Either<AppError, Success> = remoteDataSource.logOut()
 
     override suspend fun logIn(email: String, password: String): Either<AppError, Success> = remoteDataSource.logIn(email, password)
+
+    override suspend fun getUserData(): Either<AppError, User>  = remoteDataSource.getUserData()
 
 }

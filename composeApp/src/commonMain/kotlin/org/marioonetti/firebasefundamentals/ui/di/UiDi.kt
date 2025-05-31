@@ -5,6 +5,7 @@ import org.marioonetti.firebasefundamentals.ui.screens.detail.DigimonDetailViewM
 import org.marioonetti.firebasefundamentals.ui.screens.favourite.FavouriteViewModel
 import org.marioonetti.firebasefundamentals.ui.screens.home.HomeViewModel
 import org.marioonetti.firebasefundamentals.ui.screens.login.LoginViewModel
+import org.marioonetti.firebasefundamentals.ui.screens.profile.ProfileViewModel
 import org.marioonetti.firebasefundamentals.ui.screens.register.RegisterViewModel
 import org.marioonetti.firebasefundamentals.ui.screens.splash.SplashViewModel
 
@@ -16,4 +17,5 @@ val uiModule =
         factory { SplashViewModel(get()) }
         factory { DigimonDetailViewModel(get(), get(), get()) }
         factory { FavouriteViewModel(get()) }
+        factory { ProfileViewModel(get()) }
     }

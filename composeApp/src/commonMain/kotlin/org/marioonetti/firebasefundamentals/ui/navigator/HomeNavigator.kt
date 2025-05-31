@@ -21,10 +21,11 @@ import firebasefundamentals.composeapp.generated.resources.home_top_bar_title
 import org.jetbrains.compose.resources.stringResource
 import org.marioonetti.firebasefundamentals.ui.navigator.navBars.CustomBottomBar
 import org.marioonetti.firebasefundamentals.ui.navigator.navBars.CustomTopAppBar
-import org.marioonetti.firebasefundamentals.ui.navigator.navBars.currentRoute
+import org.marioonetti.firebasefundamentals.ui.navigator.navBars.currentRootSection
 import org.marioonetti.firebasefundamentals.ui.screens.detail.DigimonDetailRoute
 import org.marioonetti.firebasefundamentals.ui.screens.favourite.FavouriteRoute
 import org.marioonetti.firebasefundamentals.ui.screens.home.HomeRoute
+import org.marioonetti.firebasefundamentals.ui.screens.profile.ProfileRoute
 
 @Composable
 fun HomeNavigator(
@@ -41,12 +42,7 @@ fun HomeNavigator(
                 title = stringResource(Res.string.home_top_bar_title),
                 showBackArrow = currentRoute != Screen.DigimonList.route && currentRoute != Screen.Favourite.route,
                 onProfileClick = {
-                    rootNavController.navigate(Screen.Login.route) {
-                        popUpTo(rootNavController.graph.startDestinationId) {
-                            inclusive = true
-                        }
-                        launchSingleTop = true
-                    }
+                    homeNavController.navigate(Screen.Profile.route)
                 },
                 onBackClick = {
                     if (homeNavController.previousBackStackEntry != null) {
@@ -57,7 +53,7 @@ fun HomeNavigator(
         },
         bottomBar = {
             CustomBottomBar(
-                selectedTab = currentRoute(homeNavController) ?: Screen.Home.route,
+                selectedTab = currentRootSection(homeNavController) ?: Screen.Home.route,
                 onTabSelected = { route ->
                     if (route != homeNavController.currentDestination?.route) {
                         homeNavController.navigate(route) {
@@ -91,6 +87,9 @@ fun HomeNavigator(
             }
             composable(route = Screen.Favourite.route) {
                 FavouriteRoute(homeNavController)
+            }
+            composable(route = Screen.Profile.route) {
+                ProfileRoute(rootNavController, homeNavController)
             }
         }
     }
