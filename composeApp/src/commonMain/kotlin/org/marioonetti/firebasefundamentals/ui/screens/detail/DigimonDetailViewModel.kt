@@ -1,10 +1,9 @@
 package org.marioonetti.firebasefundamentals.ui.screens.detail
 
 import kotlinx.coroutines.launch
-import org.marioonetti.firebasefundamentals.data.model.digimon.DigimonDto
+import org.marioonetti.firebasefundamentals.domain.core.AppError
 import org.marioonetti.firebasefundamentals.domain.models.DigimonUi
 import org.marioonetti.firebasefundamentals.domain.repository.DigimonRepository
-import org.marioonetti.firebasefundamentals.domain.repository.GeminiRepository
 import org.marioonetti.firebasefundamentals.ui.RootViewModel
 import org.marioonetti.firebasefundamentals.ui.ViewEffect
 import org.marioonetti.firebasefundamentals.ui.ViewEvent
@@ -13,20 +12,10 @@ import org.marioonetti.firebasefundamentals.ui.ViewState
 class DigimonDetailViewModel(
     private val digimonName: String,
     private val digimonRepository: DigimonRepository,
-    private val geminiRepository: GeminiRepository,
 ): RootViewModel<DigimonDetailState, DigimonDetailEvent, DigimonDetailViewEffect>(DigimonDetailState.Loading) {
 
     init {
-        vmScope.launch {
-            digimonRepository.getDigimonByName(digimonName).fold(
-                success = { digimon ->
-                    checkIfDigimonIsFavourite(digimon)
-                },
-                error =  {
-                    println("Error loading digimon $it")
-                }
-            )
-        }
+        fetchDigimon()
     }
 
     override fun onEvent(event: DigimonDetailEvent) {
@@ -40,15 +29,31 @@ class DigimonDetailViewModel(
                                     val currentState = uiState.value as DigimonDetailState.Idle
                                     currentState.copy(isFavourite = !currentState.isFavourite)
                                 }
-                                println("Digimon saved as favourite")
                             },
                             error = {
-                                println("Error saving digimon as favourite $it")
+                                updateState { DigimonDetailState.Error(it) }
                             }
                         )
                     }
                 }
             }
+            is DigimonDetailEvent.OnTryAgain -> {
+                updateState { DigimonDetailState.Loading }
+                fetchDigimon()
+            }
+        }
+    }
+
+    private fun fetchDigimon() {
+        vmScope.launch {
+            digimonRepository.getDigimonByName(digimonName).fold(
+                success = { digimon ->
+                    checkIfDigimonIsFavourite(digimon)
+                },
+                error =  {
+                    updateState { DigimonDetailState.Error(it) }
+                }
+            )
         }
     }
 
@@ -61,7 +66,7 @@ class DigimonDetailViewModel(
                     }
                 },
                 error = {
-                    println("Error checking if digimon is favourite $it")
+                    updateState { DigimonDetailState.Error(it) }
                 }
             )
         }
@@ -75,10 +80,14 @@ sealed class DigimonDetailState: ViewState() {
         val digimon: DigimonUi,
         val isFavourite: Boolean = false,
     ): DigimonDetailState()
+    data class Error(
+        val error: AppError,
+    ): DigimonDetailState()
 }
 
 sealed class DigimonDetailEvent: ViewEvent() {
     data object OnFavouriteTap: DigimonDetailEvent()
+    data object OnTryAgain: DigimonDetailEvent()
 }
 
 sealed class DigimonDetailViewEffect: ViewEffect() {

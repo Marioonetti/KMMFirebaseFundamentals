@@ -6,10 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import org.koin.compose.koinInject
-import org.koin.core.parameter.parametersOf
 import org.marioonetti.firebasefundamentals.ui.navigator.Screen
-import org.marioonetti.firebasefundamentals.ui.screens.detail.DigimonDetailViewModel
-import org.marioonetti.firebasefundamentals.ui.screens.home.HomeEffect
 
 @Composable
 fun FavouriteRoute(

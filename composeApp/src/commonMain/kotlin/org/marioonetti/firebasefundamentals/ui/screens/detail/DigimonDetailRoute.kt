@@ -3,13 +3,11 @@ package org.marioonetti.firebasefundamentals.ui.screens.detail
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.navigation.NavHostController
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun DigimonDetailRoute(
-    navHostController: NavHostController,
     digimonName: String,
 ) {
     val viewModel = koinInject<DigimonDetailViewModel>(parameters = { parametersOf(digimonName) })

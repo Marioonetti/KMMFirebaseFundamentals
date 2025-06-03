@@ -17,14 +17,18 @@ import org.marioonetti.firebasefundamentals.domain.models.User
 class FirebaseRemoteDatasourceImpl: FirebaseRemoteDataSource {
 
     override suspend fun register(user: UserRequestDto): Either<AppError, Success> {
-        val result = Firebase.auth.createUserWithEmailAndPassword(user.email, user.password)
+        try {
+            val result = Firebase.auth.createUserWithEmailAndPassword(user.email, user.password)
 
-        val uid = result.user?.uid
+            val uid = result.user?.uid
 
-        return if (uid != null) {
-            saveUserData(uid, user.username)
-        } else {
-            Either.Left(AppError.Remote("Error creating user"))
+            return if (uid != null) {
+                saveUserData(uid, user.username)
+            } else {
+                Either.Left(AppError.Remote("Error creating user"))
+            }
+        } catch (e: Exception) {
+            return Either.Left(AppError.Remote("Error registering user: ${e.message}"))
         }
     }
 
@@ -137,14 +141,13 @@ class FirebaseRemoteDatasourceImpl: FirebaseRemoteDataSource {
         uid: String,
         username: String
     ): Either<AppError, Success> {
-
-        val user = mapOf(
-            "username" to username,
-            "email" to Firebase.auth.currentUser?.email,
-            "createdAt" to dev.gitlive.firebase.firestore.FieldValue.serverTimestamp
-        )
-
         try {
+            val user = mapOf(
+                "username" to username,
+                "email" to Firebase.auth.currentUser?.email,
+                "createdAt" to dev.gitlive.firebase.firestore.FieldValue.serverTimestamp
+            )
+
             Firebase.firestore.collection("users").document(uid).set(user)
             return Either.Right(Success)
         } catch (e: Exception) {

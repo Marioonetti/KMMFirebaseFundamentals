@@ -13,16 +13,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import firebasefundamentals.composeapp.generated.resources.Res
+import firebasefundamentals.composeapp.generated.resources.profile_button
+import org.jetbrains.compose.resources.stringResource
 import org.marioonetti.firebasefundamentals.ui.screens.login.LoginEvent
+import org.marioonetti.firebasefundamentals.ui.shared.ErrorComposable
 import org.marioonetti.firebasefundamentals.ui.shared.LoadingComposable
+import org.marioonetti.firebasefundamentals.ui.shared.OnboardingButton
+import org.marioonetti.firebasefundamentals.utils.MyAppColors
 import org.marioonetti.firebasefundamentals.utils.Spacings
 
 @Composable
@@ -35,7 +43,7 @@ fun ProfileScreen(
             LoadingComposable()
         }
         is ProfileState.Error -> {
-            // Handle error state, e.g., show a snackbar or dialog
+            ErrorComposable(state.error, onClick = { onEvent(ProfileEvent.OnTryAgain) })
         }
         is ProfileState.Idle -> {
             ProfileBody(state.userName, state.email, onLogout = { onEvent(ProfileEvent.OnLogout) })
@@ -57,54 +65,57 @@ fun ProfileBody(
         .take(2)
         .joinToString("")
 
-    val avatarBackground = MaterialTheme.colorScheme.primary
-
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(Spacings.p16),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize().padding(horizontal = Spacings.p16),
         verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.height(Spacings.p32))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .clip(RoundedCornerShape(Spacings.p16))
+                .background(MyAppColors.BackGroundAppColor.copy(alpha = 0.5f))
+                .padding(Spacings.p16),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(72.dp)
-                    .background(color = avatarBackground, shape = CircleShape)
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
             ) {
-                Text(
-                    text = initials,
-                    style = MaterialTheme.typography.headlineLarge.copy(color = Color.White)
-                )
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .size(72.dp)
+                        .background(color = MyAppColors.TopAppBarColor, shape = CircleShape)
+                ) {
+                    Text(
+                        text = initials,
+                        style = MaterialTheme.typography.headlineLarge.copy(color = Color.White)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(Spacings.p16))
+
+                Column {
+                    Text(
+                        text = userName,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    Spacer(modifier = Modifier.height(Spacings.p4))
+                    Text(
+                        text = email,
+                        style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.width(Spacings.p16))
+            Spacer(modifier = Modifier.height(Spacings.p32))
 
-            Column {
-                Text(
-                    text = userName,
-                    style = MaterialTheme.typography.displayMedium
-                )
-                Spacer(modifier = Modifier.height(Spacings.p4))
-                Text(
-                    text = email,
-                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(Spacings.p64))
-
-        Button(
-            onClick = onLogout,
-            modifier = Modifier.padding()
-        ) {
-            Text(text = "Log out")
+            OnboardingButton(
+                content = stringResource(Res.string.profile_button),
+                onClick = onLogout,
+            )
         }
     }
 }

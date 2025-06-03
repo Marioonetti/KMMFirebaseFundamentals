@@ -2,6 +2,7 @@ package org.marioonetti.firebasefundamentals.ui.screens.register
 
 import kotlinx.coroutines.launch
 import org.marioonetti.firebasefundamentals.data.model.firebase.UserRequestDto
+import org.marioonetti.firebasefundamentals.domain.core.AppError
 import org.marioonetti.firebasefundamentals.domain.repository.UserRepository
 import org.marioonetti.firebasefundamentals.ui.RootViewModel
 import org.marioonetti.firebasefundamentals.ui.ViewEffect
@@ -38,12 +39,16 @@ class RegisterViewModel(
                     setEffect(RegisterEffect.OnNavigateToLogin)
                 }
             }
-            else -> {}
+            is RegisterEvent.OnTryAgain -> {
+                updateState { RegisterState.Idle() }
+            }
+            is RegisterEvent.OnCheckFields -> {}
         }
     }
 
     private fun handleRegister() {
         val state = uiState.value as RegisterState.Idle
+        updateState { state.copy(showLoading = true) }
         val userReq = UserRequestDto(
             state.email.trim(),
             state.userName,
@@ -52,7 +57,7 @@ class RegisterViewModel(
         vmScope.launch {
             userRepository.register(userReq).fold(
                 error = {
-                    println("Error $it")
+                    updateState { RegisterState.Error(it) }
                 },
                 success = {
                     vmScope.launch {
@@ -70,7 +75,9 @@ sealed class RegisterState : ViewState() {
         val userName: String = "",
         val password: String = "",
         val confirmPassword: String = "",
+        val showLoading: Boolean = false
     ) : RegisterState()
+    data class Error(val error: AppError) : RegisterState()
 }
 
 sealed class RegisterEvent : ViewEvent() {
@@ -82,6 +89,7 @@ sealed class RegisterEvent : ViewEvent() {
     data object OnCheckFields : RegisterEvent()
     data object OnRegister : RegisterEvent()
     data object OnNavigateToLogin : RegisterEvent()
+    data object OnTryAgain : RegisterEvent()
 }
 
 sealed class RegisterEffect : ViewEffect() {

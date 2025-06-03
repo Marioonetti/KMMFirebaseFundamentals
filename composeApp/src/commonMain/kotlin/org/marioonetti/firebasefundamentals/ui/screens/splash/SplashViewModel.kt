@@ -1,6 +1,7 @@
 package org.marioonetti.firebasefundamentals.ui.screens.splash
 
 import kotlinx.coroutines.launch
+import org.marioonetti.firebasefundamentals.domain.core.AppError
 import org.marioonetti.firebasefundamentals.domain.repository.UserRepository
 import org.marioonetti.firebasefundamentals.ui.RootViewModel
 import org.marioonetti.firebasefundamentals.ui.ViewEffect
@@ -12,31 +13,36 @@ class SplashViewModel(
 ): RootViewModel<SplashState, SplashEvent, SplashEffect>(SplashState.Loading) {
 
     init {
-        onEvent(SplashEvent.OnCheckUser)
+        checkUserAccess()
     }
 
     override fun onEvent(event: SplashEvent) {
         when (event) {
-            is SplashEvent.OnCheckUser -> {
-                if (uiState.value is SplashState.Loading) {
-                    vmScope.launch {
-                        userRepository.isUserLoggedIn()
-                            .fold(
-                                error = {
-                                    println("Error $it")
-                                },
-                                success = {
-                                    val effect = if (it) {
-                                        SplashEffect.NavigateToHome
-                                    } else {
-                                        SplashEffect.NavigateToLogin
-                                    }
-                                    vmScope.launch { setEffect(effect) }
+            is SplashEvent.OnTryAgain -> {
+                updateState { SplashState.Loading }
+                checkUserAccess()
+            }
+        }
+    }
 
-                                }
-                            )
-                    }
-                }
+    private fun checkUserAccess() {
+        if (uiState.value is SplashState.Loading) {
+            vmScope.launch {
+                userRepository.isUserLoggedIn()
+                    .fold(
+                        error = {
+                            updateState { SplashState.Error(it) }
+                        },
+                        success = {
+                            val effect = if (it) {
+                                SplashEffect.NavigateToHome
+                            } else {
+                                SplashEffect.NavigateToLogin
+                            }
+                            vmScope.launch { setEffect(effect) }
+
+                        }
+                    )
             }
         }
     }
@@ -44,10 +50,11 @@ class SplashViewModel(
 
 sealed class SplashState : ViewState() {
     data object Loading : SplashState()
+    data class Error(val message: AppError) : SplashState()
 }
 
 sealed class SplashEvent : ViewEvent() {
-    data object OnCheckUser : SplashEvent()
+    data object OnTryAgain : SplashEvent()
 }
 
 sealed class SplashEffect : ViewEffect() {

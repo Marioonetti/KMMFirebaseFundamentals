@@ -3,10 +3,7 @@ package org.marioonetti.firebasefundamentals.ui.navigator
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -80,7 +77,7 @@ fun HomeNavigator(
                 })
             ) { backStackEntry ->
                 val digimonName: DigimonDetailArgs = backStackEntry.toRoute()
-                DigimonDetailRoute(homeNavController, digimonName.name)
+                DigimonDetailRoute(digimonName.name)
             }
             composable(route = Screen.DigimonList.route) {
                 HomeRoute(homeNavController)

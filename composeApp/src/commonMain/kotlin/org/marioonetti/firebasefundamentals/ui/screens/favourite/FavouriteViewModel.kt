@@ -1,6 +1,7 @@
 package org.marioonetti.firebasefundamentals.ui.screens.favourite
 
 import kotlinx.coroutines.launch
+import org.marioonetti.firebasefundamentals.domain.core.AppError
 import org.marioonetti.firebasefundamentals.domain.models.DigimonUi
 import org.marioonetti.firebasefundamentals.domain.repository.DigimonRepository
 import org.marioonetti.firebasefundamentals.ui.RootViewModel
@@ -23,6 +24,10 @@ class FavouriteViewModel(
                     setEffect(FavouriteViewEffect.ShowDetail(event.name))
                 }
             }
+            is FavouriteEvent.OnTryAgain -> {
+                updateState { FavouriteState.Loading }
+                loadFavourites()
+            }
         }
     }
 
@@ -35,7 +40,7 @@ class FavouriteViewModel(
                     }
                 },
                 error = {
-                    println("Error loading favourites $it")
+                    updateState { FavouriteState.Error(it) }
                 }
             )
         }
@@ -44,12 +49,17 @@ class FavouriteViewModel(
 
 sealed class FavouriteEvent: ViewEvent() {
     data class OnFavouriteTap(val name: String) : FavouriteEvent()
+    data object OnTryAgain : FavouriteEvent()
 }
 
 sealed class FavouriteState: ViewState() {
     data class Idle(
         val digimonList: List<DigimonUi>
     ) : FavouriteState()
+    data class Error(
+        val error: AppError
+    ) : FavouriteState()
+
     data object Loading : FavouriteState()
 }
 

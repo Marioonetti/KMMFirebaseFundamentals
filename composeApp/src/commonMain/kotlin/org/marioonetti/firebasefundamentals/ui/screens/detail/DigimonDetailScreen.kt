@@ -4,6 +4,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,8 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.GenericShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -37,6 +41,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import org.marioonetti.firebasefundamentals.domain.models.DigimonUi
+import org.marioonetti.firebasefundamentals.ui.shared.ErrorComposable
 import org.marioonetti.firebasefundamentals.ui.shared.LoadingComposable
 import org.marioonetti.firebasefundamentals.ui.theme.AudioWide
 import org.marioonetti.firebasefundamentals.utils.MyAppColors
@@ -53,6 +58,9 @@ fun DigimonDetailScreen(
         }
         is DigimonDetailState.Idle -> {
             DigimonDetailBodyComposable(state, onEvent)
+        }
+        is DigimonDetailState.Error -> {
+            ErrorComposable(state.error, { onEvent(DigimonDetailEvent.OnTryAgain) })
         }
     }
 }
@@ -183,7 +191,9 @@ fun DigimonInfoComposable(
             text = description,
             fontFamily = AudioWide(),
             color = MyAppColors.TopAppBarTitleColor,
-            fontSize = MaterialTheme.typography.bodyLarge.fontSize
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
         )
     }
 }

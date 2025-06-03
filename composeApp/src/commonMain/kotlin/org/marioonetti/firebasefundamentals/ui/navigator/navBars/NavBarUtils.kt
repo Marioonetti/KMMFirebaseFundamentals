@@ -3,7 +3,6 @@ package org.marioonetti.firebasefundamentals.ui.navigator.navBars
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import org.marioonetti.firebasefundamentals.ui.navigator.Screen
 

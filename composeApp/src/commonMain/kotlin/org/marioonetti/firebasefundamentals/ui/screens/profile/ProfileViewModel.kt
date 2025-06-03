@@ -13,16 +13,7 @@ class ProfileViewModel(
 ): RootViewModel<ProfileState, ProfileEvent, ProfileEffect>(ProfileState.Loading) {
 
     init {
-        vmScope.launch {
-            userRepository.getUserData().fold(
-                success = { user ->
-                    updateState { ProfileState.Idle(userName = user.username, email = user.email) }
-                },
-                error = {
-                    updateState { ProfileState.Error(it) }
-                }
-            )
-        }
+        fetchUserData()
     }
 
     override fun onEvent(event: ProfileEvent) {
@@ -42,9 +33,25 @@ class ProfileViewModel(
                     )
                 }
             }
+            is ProfileEvent.OnTryAgain -> {
+                updateState { ProfileState.Loading }
+                fetchUserData()
+            }
         }
     }
 
+    private fun fetchUserData() {
+        vmScope.launch {
+            userRepository.getUserData().fold(
+                success = { user ->
+                    updateState { ProfileState.Idle(userName = user.username, email = user.email) }
+                },
+                error = {
+                    updateState { ProfileState.Error(it) }
+                }
+            )
+        }
+    }
 
 }
 
@@ -56,6 +63,7 @@ sealed class ProfileState: ViewState() {
 
 sealed class ProfileEvent: ViewEvent() {
     data object OnLogout : ProfileEvent()
+    data object OnTryAgain : ProfileEvent()
 }
 
 sealed class ProfileEffect: ViewEffect() {

@@ -14,7 +14,7 @@ import org.marioonetti.firebasefundamentals.data.model.digimon.DigimonEntity
     version = 1,
     exportSchema = true
 )
-@ConstructedBy(AppDatabaseContrusctor::class)
+@ConstructedBy(AppDatabaseConstrusctor::class)
 abstract class RoomDb: RoomDatabase() {
     abstract fun digimonDao(): DigimonDao
 
@@ -24,6 +24,6 @@ abstract class RoomDb: RoomDatabase() {
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
-expect object AppDatabaseContrusctor: RoomDatabaseConstructor<RoomDb> {
+expect object AppDatabaseConstrusctor: RoomDatabaseConstructor<RoomDb> {
     override fun initialize(): RoomDb
 }

@@ -17,12 +17,13 @@ import org.marioonetti.firebasefundamentals.utils.Spacings
 
 @Composable
 fun OnboardingButton(
+    modifier: Modifier = Modifier,
     content: String,
     onClick: () -> Unit,
 ) {
     Button(
         onClick = { onClick() },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
         shape = RoundedCornerShape(Spacings.p16),

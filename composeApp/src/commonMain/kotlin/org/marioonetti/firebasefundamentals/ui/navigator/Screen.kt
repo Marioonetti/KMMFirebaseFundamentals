@@ -23,7 +23,6 @@ sealed class Screen(
     data object Profile : Screen("/profile")
 
     fun withArgs(vararg args: Pair<String, String>): String {
-        // replace all keys with values
         var newRoute = route
         args.forEach { (key, value) ->
             newRoute = newRoute.replace("{$key}", value)

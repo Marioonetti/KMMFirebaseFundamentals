@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,8 +32,17 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import firebasefundamentals.composeapp.generated.resources.Res
+import firebasefundamentals.composeapp.generated.resources.register_button_text
+import firebasefundamentals.composeapp.generated.resources.register_confirm_password_hint
+import firebasefundamentals.composeapp.generated.resources.register_email_hint
+import firebasefundamentals.composeapp.generated.resources.register_go_back
 import firebasefundamentals.composeapp.generated.resources.register_header
+import firebasefundamentals.composeapp.generated.resources.register_password_hint
+import firebasefundamentals.composeapp.generated.resources.register_username_hint
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.marioonetti.firebasefundamentals.ui.shared.ErrorComposable
+import org.marioonetti.firebasefundamentals.ui.shared.LoadingComposable
 import org.marioonetti.firebasefundamentals.ui.shared.NormalTextFieldComposable
 import org.marioonetti.firebasefundamentals.ui.shared.OnboardingButton
 import org.marioonetti.firebasefundamentals.ui.shared.PasswordTextFieldComposable
@@ -47,6 +57,9 @@ fun RegisterScreen(
     when (state) {
         is RegisterState.Idle -> {
             RegisterBodyComposable(state, onEvent)
+        }
+        is RegisterState.Error -> {
+            ErrorComposable(state.error, onClick = { onEvent(RegisterEvent.OnTryAgain) })
         }
     }
 
@@ -90,19 +103,19 @@ fun RegisterBodyComposable(
 
             NormalTextFieldComposable(
                 value = state.email,
-                hint = "Correo electrónico",
+                hint = stringResource(Res.string.register_email_hint),
                 onValueChange = { onEvent(RegisterEvent.OnEmailChanged(it)) }
             )
 
             NormalTextFieldComposable(
                 value = state.userName,
-                hint = "Nombre de usuario",
+                hint = stringResource(Res.string.register_username_hint),
                 onValueChange = { onEvent(RegisterEvent.OnUsernameChanged(it)) }
             )
 
             PasswordTextFieldComposable(
                 value = state.password,
-                hint = "Contraseña",
+                hint = stringResource(Res.string.register_password_hint),
                 passwordVisible = passwordVisible,
                 onValueChange = { onEvent(RegisterEvent.OnPasswordChanged(it)) },
                 onPasswordVisibilityChange = { passwordVisible = !passwordVisible }
@@ -110,7 +123,7 @@ fun RegisterBodyComposable(
 
             PasswordTextFieldComposable(
                 value = state.confirmPassword,
-                hint = "Confirmar contraseña",
+                hint = stringResource(Res.string.register_confirm_password_hint),
                 passwordVisible = confirmVisible,
                 onValueChange = { onEvent(RegisterEvent.OnConfirmPasswordChanged(it)) },
                 onPasswordVisibilityChange = { confirmVisible = !confirmVisible }
@@ -118,21 +131,25 @@ fun RegisterBodyComposable(
 
             Spacer(modifier = Modifier.height(Spacings.p16))
 
-            OnboardingButton(
-                content = "Registrarse",
-                onClick = { onEvent(RegisterEvent.OnRegister) }
-            )
-
-            TextButton(
-                onClick = { onEvent(RegisterEvent.OnNavigateToLogin) },
-                modifier = Modifier.padding(top = Spacings.p8)
-            ) {
-                Text(
-                    text = "Volver al login",
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                    color = MyAppColors.YellowButton
+            if (state.showLoading) {
+                CircularProgressIndicator()
+            } else {
+                OnboardingButton(
+                    content = stringResource(Res.string.register_button_text),
+                    onClick = { onEvent(RegisterEvent.OnRegister) }
                 )
+
+                TextButton(
+                    onClick = { onEvent(RegisterEvent.OnNavigateToLogin) },
+                    modifier = Modifier.padding(top = Spacings.p8)
+                ) {
+                    Text(
+                        text = stringResource(Res.string.register_go_back),
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        color = MyAppColors.YellowButton
+                    )
+                }
             }
         }
     }

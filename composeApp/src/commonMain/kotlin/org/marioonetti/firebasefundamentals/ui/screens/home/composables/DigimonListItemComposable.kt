@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import coil3.compose.AsyncImage
-import org.marioonetti.firebasefundamentals.data.model.digimon.DigimonDto
 import org.marioonetti.firebasefundamentals.domain.models.DigimonUi
 import org.marioonetti.firebasefundamentals.ui.theme.AudioWide
 import org.marioonetti.firebasefundamentals.ui.theme.Bungee

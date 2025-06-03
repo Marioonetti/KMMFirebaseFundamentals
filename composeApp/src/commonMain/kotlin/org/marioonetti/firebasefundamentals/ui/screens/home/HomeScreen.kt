@@ -1,24 +1,16 @@
 package org.marioonetti.firebasefundamentals.ui.screens.home
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import firebasefundamentals.composeapp.generated.resources.Res
-import firebasefundamentals.composeapp.generated.resources.home_top_bar_title
-import org.jetbrains.compose.resources.stringResource
 import org.marioonetti.firebasefundamentals.ui.screens.home.composables.DigimonListItemComposable
-import org.marioonetti.firebasefundamentals.ui.navigator.navBars.CustomBottomBar
-import org.marioonetti.firebasefundamentals.ui.navigator.navBars.CustomTopAppBar
+import org.marioonetti.firebasefundamentals.ui.shared.ErrorComposable
 import org.marioonetti.firebasefundamentals.ui.shared.LoadingComposable
 import org.marioonetti.firebasefundamentals.utils.Spacings
 
@@ -32,9 +24,14 @@ fun HomeScreen(
         is HomeState.Loading -> {
             LoadingComposable()
         }
-
         is HomeState.Idle -> {
             HomeBodyComposable(state, onEvent, modifier)
+        }
+        is HomeState.Error -> {
+            ErrorComposable(
+                error = state.error,
+                onClick = { onEvent(HomeEvent.OnTryAgain) },
+            )
         }
     }
 }

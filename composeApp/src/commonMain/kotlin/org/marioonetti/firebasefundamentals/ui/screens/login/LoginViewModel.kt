@@ -1,6 +1,7 @@
 package org.marioonetti.firebasefundamentals.ui.screens.login
 
 import kotlinx.coroutines.launch
+import org.marioonetti.firebasefundamentals.domain.core.AppError
 import org.marioonetti.firebasefundamentals.domain.repository.UserRepository
 import org.marioonetti.firebasefundamentals.ui.RootViewModel
 import org.marioonetti.firebasefundamentals.ui.ViewEffect
@@ -27,7 +28,7 @@ class LoginViewModel(
             }
             is LoginEvent.OnCheckFields -> {
                 if (uiState.value is LoginState.Idle) {
-                    // TODO: Check fields
+
                 }
             }
             is LoginEvent.OnNavigateToRegister -> {
@@ -36,15 +37,16 @@ class LoginViewModel(
                 }
             }
             is LoginEvent.OnLogIn -> {
-                if (uiState.value is LoginState.Idle) {
-                    val state = uiState.value as LoginState.Idle
+                val currentState = uiState.value
+                if (currentState is LoginState.Idle) {
+                    updateState { currentState.copy(showLoading = true) }
                     vmScope.launch {
                         userRepository.logIn(
-                            state.email.trim(),
-                            state.password.trim()
+                            currentState.email.trim(),
+                            currentState.password.trim()
                         ).fold(
                             error = {
-                                println("Error $it")
+                                updateState { LoginState.Error(it) }
                             },
                             success = {
                                 vmScope.launch {
@@ -55,6 +57,7 @@ class LoginViewModel(
                     }
                 }
             }
+            is LoginEvent.OnClose -> updateState { LoginState.Idle() }
         }
     }
 
@@ -64,6 +67,11 @@ sealed class LoginState: ViewState() {
     data class Idle(
         val email: String = "",
         val password: String = "",
+        val showLoading: Boolean = false,
+    ): LoginState()
+
+    data class Error(
+        val error: AppError
     ): LoginState()
 }
 
@@ -74,6 +82,7 @@ sealed class LoginEvent : ViewEvent() {
 
     data object OnLogIn : LoginEvent()
     data object OnNavigateToRegister : LoginEvent()
+    data object OnClose : LoginEvent()
 }
 
 sealed class LoginEffect : ViewEffect() {

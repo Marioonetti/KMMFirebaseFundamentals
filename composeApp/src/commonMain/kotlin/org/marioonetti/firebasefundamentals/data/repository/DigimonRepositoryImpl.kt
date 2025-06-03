@@ -67,7 +67,8 @@ class DigimonRepositoryImpl(
     override suspend fun checkFavDigimon(name: String): Either<AppError, Boolean> = firebaseRemoteDataSource.checkFavDigimon(name)
 
     private suspend fun getDigimonDescription(digimonName: String): Either<AppError, String> {
-        val desc = geminiRepository.generateMessage("Dame una descripcion resumida y en castellano de $digimonName")
+        val desc = geminiRepository.generateMessage("Generate just the following text, remove all unnecessary comments: a short description of the digimon: $digimonName " +
+                "and give it some attacks under the description in the next format: attackName: attackDescription. the attack description has to be in one line")
         return desc
     }
 }
