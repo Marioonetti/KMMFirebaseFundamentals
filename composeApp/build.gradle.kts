@@ -53,14 +53,14 @@ kotlin {
             description = "Generates ApiKeys.kt from local.properties"
 
             val outputDir = generatedSourcesDir.get().asFile
-            val outputFile = File(outputDir, "org/marioonetti/firebasefundamentals/secrets/ApiKeys.kt")
+            val outputFile = File(outputDir, "org/packageName/firebasefundamentals/secrets/ApiKeys.kt")
 
             outputs.dir(outputDir)
 
             doLast {
                 outputFile.parentFile.mkdirs()
                 outputFile.writeText("""
-                package org.marioonetti.firebasefundamentals.secrets
+                package org.packageName.firebasefundamentals.secrets
 
                 /**
                  * Object containing API keys generated from local.properties.
